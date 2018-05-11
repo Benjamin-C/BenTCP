@@ -16,6 +16,8 @@ public class Listener extends Thread {
 	public Listener(long delay, InputStream instream, TCPOnDataArrival onData) {
 		waitTime = delay;
 		running = false;
+		is = instream;
+		odr = onData;
 	}
 	
 	@Override
