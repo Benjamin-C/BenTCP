@@ -8,6 +8,11 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+/**
+ * A client to connect to a TCP server
+ * @author Benjamin Crall
+ *
+ */
 public class TCPClient {
 	
 	private volatile InputStream is;
@@ -28,21 +33,62 @@ public class TCPClient {
 	
 	private long waitTime;
 	
+	/**
+	 * Creates a {@link TCPClient}
+	 * 
+	 * @param onDataArrival a {@link TCPOnDataArrival} to run when data arrives
+	 * @param setupStream 	a {@link TCPSetupStream} to help with setup
+	 */
 	public TCPClient(TCPOnDataArrival onDataArrival, TCPSetupStream setupStream) {
 		this("", -1, onDataArrival, setupStream, 1, "");
 	}
+	
+	/**
+	 * Creates a {@link TCPClient}
+	 * 
+	 * @param onDataArrival a {@link TCPOnDataArrival} to run when data arrives
+	 * @param setupStream 	a {@link TCPSetupStream} to help with setup
+	 * @param name 			a String to name the client
+	 */
 	public TCPClient(TCPOnDataArrival onDataArrival, TCPSetupStream setupStream, String name) {
 		this("", -1, onDataArrival, setupStream, 1, name);
 	}
 	
+	/**
+	 * Creates a {@link TCPClient}
+	 * 
+	 * @param onDataArrival a {@link TCPOnDataArrival} to run when data arrives
+	 * @param setupStream 	a {@link TCPSetupStream} to help with setup
+	 * @param name 			a String to name the client
+	 * @param wait 			a long delay in ms between data checks
+	 */
 	public TCPClient(TCPOnDataArrival onDataArrival, TCPSetupStream setupStream, long wait) {
 		this("", -1, onDataArrival, setupStream, wait, "");
 	}
 	
+	/**
+	 * Creates a {@link TCPClient}
+	 * 
+	 * @param ipAdderss 	a String of the IP address to connect to
+	 * @param portNumber 	the int port number to connect to at the destination ip
+	 * @param onDataArrival a {@link TCPOnDataArrival} to run when data arrives
+	 * @param setupStream 	a {@link TCPSetupStream} to help with setup
+	 * @param name 			a String to name the client
+	 */
 	public TCPClient(String ipAdderss, int portNumber, TCPOnDataArrival onDataArrival, TCPSetupStream setupStream, String name) {
 		this(ipAdderss, portNumber, onDataArrival, setupStream, 1, name);
 	}
 	
+	/**
+	 * Creates a {@link TCPClient}
+	 * 
+	 * @param ipAdderss 	a String of the IP address to connect to
+	 * @param portNumber 	the int port number to connect to at the destination ip
+	 * @param onDataArrival a {@link TCPOnDataArrival} to run when data arrives
+	 * @param setupStream 	a {@link TCPSetupStream} to help with setup
+	 * @param wait 			a long delay in ms between data checks
+	 * @param name 			a String to name the client
+	 */
 	public TCPClient(String ipAdderss, int portNumber, TCPOnDataArrival onDataArrival, TCPSetupStream setupStream, long wait, String name) {
 		this.setupStream = setupStream;
 		myName = name;
@@ -61,6 +107,9 @@ public class TCPClient {
 		tryToConnect();
     }
 	
+	/**
+	 * Tries to connect to the TCP server at IP:port
+	 */
 	public void tryToConnect() {
 		setupStream.write("Connecting to " + ip.toString() + ":" + port);
 		try {
@@ -100,6 +149,9 @@ public class TCPClient {
 		}
 	}
 	
+	/**
+	 * Starts the {@link Listener
+	 */
 	public void startListening() {
 		listen.startListening();
 		if(!myName.equals("")) {
@@ -107,10 +159,16 @@ public class TCPClient {
 		}
 	}
 	
+	/**
+	 * Stops the Listener
+	 */
 	public void stopListening() {
 		listen.stopListening();
 	}
 	
+	/**
+	 * Closes the TCP connection
+	 */
 	public void close() {
 		listen.stopListening();
 		try {
@@ -121,6 +179,12 @@ public class TCPClient {
 		}
 	}
 	
+	/**
+	 * Converts a {@link String} ip to an int ip. Supports xxx.xxx.xxx.xxx or localhost
+	 * 
+	 * @param ip 	the {@link String} ip to convert
+	 * @return the 	int new ip
+	 */
 	private byte[] ipToInt(String ip) {
 		setupStream.write(ip);
 		if(ip.equals("localhost")) {
@@ -165,10 +229,21 @@ public class TCPClient {
 		return null;
 	}
 	
+	/**
+	 * Gets the {@link OutputStream} from the server
+	 * 
+	 * @return the {@link OutputStream}
+	 */
 	public OutputStream getOutputStream() {
 		return os;
 	}
 	
+	/**
+	 * Converts a byte to a string in hex
+	 * 
+	 * @param in the byte to convert
+	 * @return the {@link String} representation in hex
+	 */
 	@SuppressWarnings("unused")
 	private String toHex(byte in) {
 	    StringBuilder sb = new StringBuilder();
@@ -176,6 +251,9 @@ public class TCPClient {
 	    return sb.toString();
 	}
 	
+	/**
+	 * Gets the IP from the {@link TCPSetupStream}
+	 */
 	public void pickIP() {
 		while(ip == null) {
     		setupStream.write("Please input an IP");

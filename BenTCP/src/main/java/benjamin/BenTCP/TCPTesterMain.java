@@ -12,44 +12,18 @@ public class TCPTesterMain {
 	
 	@SuppressWarnings("resource")
 	public static void main(String args[]) {
-		final Scanner scan = new Scanner(System.in);
-		
-		TCPSetupStream setupStream = new TCPSetupStream() {
-			
-			public void write(String str) {
-				System.out.println(str);
-			}
-			
-			public String read() {
-				return scan.nextLine();
-			}
-
-			public void close() {
-				System.exit(0);
-			}
-		};
-		
-		TCPOnDataArrival odr = new TCPOnDataArrival() {
-			public void onDataArrived(byte[] data) {
-				// TODO Auto-generated method stub
-				String dataString = "";
-				for(int i = 0; i < data.length; i++) {
-					dataString = dataString + (char) data[i];
-				}
-				System.out.println("Recived: " + dataString);
-			}
-		};
+		Scanner scan = new Scanner(System.in);
 		
 		final OutputStream os;
 		System.out.println("Type 'C' for client, or anything else for server");
 		String in = scan.nextLine();
 		if(in.length() > 0 && in.toUpperCase().charAt(0) == 'C') {
 			System.out.println("Starting client");
-			 cli = new TCPClient(odr, setupStream);
+			 cli = new TCPClient(TCPOnDataArrival.defaultOnDataArrival, TCPSetupStream.defaultSetupStream(scan));
 			os = cli.getOutputStream();
 		} else {
 			System.out.println("Starting server");
-			ser = new TCPServer(odr, setupStream);
+			ser = new TCPServer(TCPOnDataArrival.defaultOnDataArrival, TCPSetupStream.defaultSetupStream(scan));
 			os = ser.getOutputStream();
 		}
 		

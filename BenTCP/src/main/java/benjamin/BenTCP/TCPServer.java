@@ -8,6 +8,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+/**
+ * A server to interact with TCP clients
+ * 
+ * @author Benjamin Crall
+ *
+ */
 public class TCPServer {
 	
 	private volatile InputStream is;
@@ -27,23 +33,31 @@ public class TCPServer {
 	/**
 	 * Sets up a TCP Server. Uses setupStream to pick port
 	 * 
-	 * @param onDataArrival	An OnDataArrival interface to do something when data arrives
-	 * @param setupStream	A TCPSetupStream used to initialize the server
+	 * @param onDataArrival	an {@link TCPOnDataArrival} interface to do something when data arrives
+	 * @param setupStream	a {@link TCPSetupStream} used to initialize the server
 	 */
 	public TCPServer(TCPOnDataArrival onDataArrival, TCPSetupStream setupStream) {
 		this(-1, onDataArrival, setupStream, 1);
 	}
 	
+	/**
+	 * Sets up a TCP Server. Uses setupStream to pick port
+	 * 
+	 * @param onDataArrival	an {@link TCPOnDataArrival} interface to do something when data arrives
+	 * @param setupStream	a {@link TCPSetupStream} used to initialize the server
+	 * @param wait 			a long delay in ms between checking for new data
+	 */
 	public TCPServer(TCPOnDataArrival onDataArrival, TCPSetupStream setupStream, long wait) {
 		this(-1, onDataArrival, setupStream, wait);
 	}
 	
 	/**
-	 * Sets up a TCP Server
+	 * Sets up a TCP Server on a port
 	 * 
-	 * @param portNumber	An integer that sets the port
-	 * @param onDataArrival	An OnDataArrival interface to do something when data arrives
-	 * @param setupStream	A TCPSetupStream used to initialize the server
+	 * @param portNumber	an int that sets the port
+	 * @param onDataArrival	an {@link TCPOnDataArrival} interface to do something when data arrives
+	 * @param setupStream	a {@link TCPSetupStream} used to initialize the server
+	 * @param wait 			a long delay in ms between checking for new data
 	 */
 	public TCPServer(int portNumber, TCPOnDataArrival onDataArrival, TCPSetupStream setupStream, long wait) {
 		this.setupStream = setupStream;
@@ -81,14 +95,23 @@ public class TCPServer {
 		}
     }
 	
+	/**
+	 * Starts listening for incoming data
+	 */
 	public void startListening() {
 		listen.startListening();
 	}
 	
+	/**
+	 * Stops listening for incoming data
+	 */
 	public void stopListening() {
 		listen.stopListening();
 	}
 
+	/**
+	 * Closes the server
+	 */
 	public void close() {
 		listen.stopListening();
 		listen.interrupt();
@@ -102,6 +125,12 @@ public class TCPServer {
 		setupStream.close();
 	}
 	
+	/**
+	 * Converts a {@link String} ip to an int ip. Supports xxx.xxx.xxx.xxx or localhost
+	 * 
+	 * @param ip 	the {@link String} ip to convert
+	 * @return the 	int new ip
+	 */
 	@SuppressWarnings("unused")
 	private byte[] ipToInt(String ip) {
 		setupStream.write(ip);
@@ -147,10 +176,21 @@ public class TCPServer {
 		return null;
 	}
 	
+	/**
+	 * Gets the {@link OutputStream} from the server
+	 * 
+	 * @return the {@link OutputStream}
+	 */
 	public OutputStream getOutputStream() {
 		return os;
 	}
 	
+	/**
+	 * Converts a byte to a string in hex
+	 * 
+	 * @param in the byte to convert
+	 * @return the {@link String} representation in hex
+	 */
 	@SuppressWarnings("unused")
 	private String toHex(byte in) {
 	    StringBuilder sb = new StringBuilder();
@@ -158,6 +198,9 @@ public class TCPServer {
 	    return sb.toString();
 	}
 	
+	/**
+	 * Tries to start the TCP server
+	 */
 	@SuppressWarnings("resource")
 	private void tryToSetupServer() {
 		try {

@@ -13,6 +13,13 @@ public class Listener extends Thread {
 	private InputStream is;
 	private TCPOnDataArrival odr;
 	
+	/**
+	 * Creates a {@link List} for TCP data
+	 * 
+	 * @param delay 	the long delay in ms between checks for data
+	 * @param instream 	the {@link InputStream} to write data to
+	 * @param onData 	a {@link TCPOnDataArrival} to run when data arrives
+	 */
 	public Listener(long delay, InputStream instream, TCPOnDataArrival onData) {
 		waitTime = delay;
 		running = false;
@@ -53,11 +60,17 @@ public class Listener extends Thread {
 		throw new UnsupportedOperationException();
 	}
 	
+	/**
+	 * Starts the {@link Listener} listening
+	 */
 	public void startListening() {
 		running = true;
 		super.start();
 	}
 
+	/**
+	 * Stops the {@link Listener} listening
+	 */
 	public void stopListening() {
 		running = false;
 	}
