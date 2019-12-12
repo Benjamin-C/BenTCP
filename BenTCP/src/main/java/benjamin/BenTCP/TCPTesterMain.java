@@ -4,6 +4,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Scanner;
 
+/**
+ * @version 1.0.1
+ * @author 705822
+ *
+ */
 public class TCPTesterMain {
 
 	public static volatile boolean running;
