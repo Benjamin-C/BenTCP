@@ -5,7 +5,7 @@ import java.io.OutputStream;
 import java.util.Scanner;
 
 /**
- * @version 1.0.1
+ * @version 1.0.2
  * @author 705822
  *
  */
@@ -40,13 +40,14 @@ public class TCPTesterMain {
 					if(scan.hasNextLine()) {
 						String str = scan.nextLine();
 						if(str.length() > 0) {
-							if(str.charAt(0) == '/') {
-								if(str.charAt(1) == '/') {
+							if(str.charAt(0) == '{') {
+								if(str.substring(1, Math.min(str.length(), 11)).equals("{tcpruncmd}")) {
+									str = str.substring(1);
+									switch(str) {
+									case "end": { if(cli != null){cli.close();} if(ser != null){ser.close();} } break;
+									}
+								} else {
 									print(str);
-								}
-								str = str.substring(1);
-								switch(str) {
-								case "end": { if(cli != null){cli.close();} if(ser != null){ser.close();} } break;
 								}
 							} else {
 								print(str);
