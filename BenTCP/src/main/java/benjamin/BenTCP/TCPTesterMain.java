@@ -15,7 +15,6 @@ public class TCPTesterMain {
 	public static volatile TCPServer ser;
 	public static volatile TCPClient cli;
 	
-	@SuppressWarnings("resource")
 	public static void main(String args[]) {
 		Scanner scan = new Scanner(System.in);
 		
